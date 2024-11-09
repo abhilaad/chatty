@@ -1,6 +1,7 @@
+import { addNotification, clearNotification } from '@redux/reducers/notifications/notification.reducer';
 import { addUser, clearUser } from '@redux/reducers/user/user.reducer';
 import { avatarColors } from '@services/utils/static.data';
-import { floor, random } from 'lodash';
+import { floor, random, some } from 'lodash';
 
 export class Utils {
   static avatarColor() {
@@ -35,9 +36,63 @@ export class Utils {
 
   static clearStore({ dispatch, deleteStorageUsername, deleteSessionPageReload, setLoggedIn }) {
     dispatch(clearUser());
-    // dispatch clear notification action
+    dispatch(clearNotification());
     deleteStorageUsername();
     deleteSessionPageReload();
     setLoggedIn(false);
+  }
+
+  static dispatchNotification(message, type, dispatch) {
+    dispatch(addNotification({ message, type }));
+  }
+
+  static dispatchClearNotification(dispatch) {
+    dispatch(clearNotification());
+  }
+
+  static appEnvironment() {
+    const env = process.env.REACT_APP_ENVIRONMENT;
+    if (env === 'development') {
+      return 'DEV';
+    } else if (env === 'staging') {
+      return 'STG';
+    }
+  }
+
+  static mapSettingsDropdownItems(setSettings) {
+    const items = [];
+    const item = {
+      topText: 'My Profile',
+      subText: 'View personal profile.'
+    };
+    items.push(item);
+    setSettings(items);
+    return items;
+  }
+
+  static appImageUrl(version, id) {
+    if (typeof version === 'string' && typeof id === 'string') {
+      version = version.replace(/['"]+/g, '');
+      id = id.replace(/['"]+/g, '');
+    }
+    return `https://res.cloudinary.com/df1ejejij/image/upload/v${version}/${id}`;
+  }
+
+  static generateString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = ' ';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
+  static checkIfUserIsBlocked(blocked, userId) {
+    return some(blocked, (id) => id === userId);
+  }
+
+  static checkIfUserIsFollowed(userFollowers, postCreatorId, userId) {
+    return some(userFollowers, (user) => user._id === postCreatorId || postCreatorId === userId);
   }
 }
