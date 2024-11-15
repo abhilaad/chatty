@@ -28,7 +28,6 @@ const ReactionsAndCommentsDisplay = ({ post }) => {
   const getPostCommentsNames = async () => {
     try {
       const response = await postService.getPostCommentsNames(post?._id);
-      console.log(response.data.comments);
       setPostCommentNames([...new Set(response.data.comments.names)]);
     } catch (error) {
       Utils.dispatchNotification(error?.response?.data?.message, 'error', dispatch);
@@ -63,7 +62,7 @@ const ReactionsAndCommentsDisplay = ({ post }) => {
           <div className="likes-block-icons reactions-icon-display">
             {reactions.length > 0 &&
               reactions.map((reaction) => (
-                <div className="tooltip-container" key={Utils.generateString(10)}>
+                <div className="tooltip-container" key={reaction?.type}>
                   <img
                     data-testid="reaction-img"
                     className="reaction-img"
