@@ -25,6 +25,7 @@
     &-conversation {
       grid-area: message;
       flex-grow: 1;
+      width: 600px;
 
       .no-chat {
         color: var(--black-3);
@@ -33,7 +34,7 @@
         position: absolute;
         padding: 20px;
         background-color: var(--white-1);
-        width: 50%;
+        // width: 50%;
         display: flex;
         justify-content: center;
         height: 100%;
